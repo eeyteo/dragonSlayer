@@ -1,7 +1,7 @@
 # dragonSlayer
 
 **Description**: a way to integrate RGB led strip driver into Home Assistant via webhooks.
-
+You can find a [video guide here](https://youtu.be/zXqE7d4_gOc).
 ## Hardware
 This project aim to provide a way to control an ESP32-C3 RGB driver via web comands.
 Since the specific board is not currently well supported by ESP Home, we need another way
