@@ -1,0 +1,64 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+sensor:
+  - platform: rest
+    name: dragon_light_state
+    resource: "http://192.168.1.66/state" # Change to your board's static adress
+    method: GET
+    value_template: "OK"
+    json_attributes: ["red", "green", "blue"]
+    scan_interval: 5
+    headers:
+      Content-Type: application/json
+    
+rest_command:
+  dragon_red_light_on:
+    url: "http://192.168.1.66/red" # Change to your board's static adress
+    method: get
+  dragon_green_light_on:
+    url: "http://192.168.1.66/green" # Change to your board's static adress
+    method: get
+  dragon_blue_light_on:
+    url: "http://192.168.1.66/blue" # Change to your board's static adress
+    method: get
+  dragon_lights_off:
+    url: "http://192.168.1.66/off" # Change to your board's static adress
+    method: get
+    
+template:
+  # No additional config needed, just ensures the integration loads
+  
+switch:
+  - platform: template
+    switches:
+      dragon_red_light:
+        friendly_name: "Dragon Red Light"
+        value_template: "{{ state_attr('sensor.dragon_light_state', 'red') == true }}"
+        turn_on:
+          service: rest_command.dragon_red_light_on
+        turn_off:
+          service: rest_command.dragon_lights_off
+      dragon_green_light:
+        friendly_name: "Dragon Green Light"
+        value_template: "{{ state_attr('sensor.dragon_light_state', 'green') == true }}"
+        turn_on:
+          service: rest_command.dragon_green_light_on
+        turn_off:
+          service: rest_command.dragon_lights_off
+      dragon_blue_light:
+        friendly_name: "Dragon Blue Light"
+        value_template: "{{ state_attr('sensor.dragon_light_state', 'blue') == true }}"
+        turn_on:
+          service: rest_command.dragon_blue_light_on
+        turn_off:
+          service: rest_command.dragon_lights_off
